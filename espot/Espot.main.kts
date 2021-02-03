@@ -16,39 +16,17 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
     override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
         val childCount = Files.list(dir).count()
         info.putIfAbsent(dir, mutableListOf(childCount, 0))
-
-        print("   ")
-        val depth = (dir - root).size
-        for (i in 2..depth) {
-            val parent = dir.root.resolve(dir.subpath(0, i - 1))
-            if (info[parent]!![1] < info[parent]!![0]) {
-                print("│  ")
-            } else {
-                print("   ")
-            }
-        }
-        info[dir.parent]?.set(1, info[dir.parent]!![1] + 1)
+        printBranches(dir)
         if (dir == root || info[dir.parent]!![0] <= info[dir.parent]!![1]) {
             println("└── \uD83D\uDDC1 ${dir.fileName}")
         } else {
             println("├── \uD83D\uDDC1 ${dir.fileName}")
         }
-
         return FileVisitResult.CONTINUE
     }
 
     override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
-        print("   ")
-        val depth = (file - root).size
-        for (i in 2..depth) {
-            val parent = file.root.resolve(file.subpath(0, i - 1))
-            if (info[parent]!![1] < info[parent]!![0]) {
-                print("│  ")
-            } else {
-                print("   ")
-            }
-        }
-        info[file.parent]?.set(1, info[file.parent]!![1] + 1)
+        printBranches(file)
         if (info[file.parent]!![0] > info[file.parent]!![1]) {
             println("├── ${file.fileName}")
         } else {
@@ -57,15 +35,23 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
         return FileVisitResult.CONTINUE
     }
 
+    private fun printBranches(file: Path) {
+        if (file != root) print("   ")
+        val depth = (file - root).size - 1
+        for (i in 1..depth) {
+            val parent = file.root.resolve(file.subpath(0, i))
+            if (info[parent]!![1] < info[parent]!![0]) print("│  ") else print("   ")
+        }
+        info[file.parent]?.set(1, info[file.parent]!![1] + 1)
+    }
+
     override fun visitFileFailed(file: Path, exc: IOException?): FileVisitResult {
-        println("$file failed. exception: $exc")
+        println("Failed to visit $file")
         return FileVisitResult.CONTINUE
     }
 
     override fun postVisitDirectory(dir: Path, exc: IOException?): FileVisitResult {
-        if (info[dir]!!.first() < 1) {
-            print("   └── .: Empty :.")
-        }
+        if (info[dir]!!.first() < 1) print("   └── .: Empty :.")
         info.remove(dir)
         return FileVisitResult.CONTINUE
     }
