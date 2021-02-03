@@ -16,27 +16,29 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
     override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
         val childCount = Files.list(dir).count()
         info.putIfAbsent(dir, mutableListOf(childCount, 0))
-        info[dir.parent]?.set(1, info[dir.parent]!![1] + 1)
 
+        print("   ")
         val depth = (dir - root).size
-        for (i in 1..depth) {
-            val parent = dir.root.resolve(dir.subpath(0, dir.count() - i))
-            if (info[parent]!![0] > info[parent]!![1]) {
+        for (i in 2..depth) {
+            val parent = dir.root.resolve(dir.subpath(0, i))
+            if (info[parent]!![1] < info[parent]!![0]) {
                 print("│  ")
             } else {
                 print("   ")
             }
         }
+        info[dir.parent]?.set(1, info[dir.parent]!![1] + 1)
         println("├── \uD83D\uDDC1 ${dir.fileName}")
 
         return FileVisitResult.CONTINUE
     }
 
     override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+        print("   ")
         val depth = (file - root).size
-        for (i in 1..depth) {
-            val parent = file.root.resolve(file.subpath(0, file.count() - i))
-            if (info[parent]!![0] > info[parent]!![1]) {
+        for (i in 2..depth) {
+            val parent = file.root.resolve(file.subpath(0, i))
+            if (info[parent]!![1] < info[parent]!![0]) {
                 print("│  ")
             } else {
                 print("   ")
