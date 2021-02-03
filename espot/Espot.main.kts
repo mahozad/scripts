@@ -11,11 +11,13 @@ import java.nio.file.attribute.BasicFileAttributes
 
 data class Info(val fileCount: Long, var visited: Int = 0)
 
+val folderSymbol = "🗁"
 val root = Path.of("D:/Music/")
 val result = Path.of("result.txt")
 val pathInfo = mutableMapOf<Path, Info>()
-val folderSymbol = "🗁"
 val Path.info get() = pathInfo[this] ?: Info(0)
+val Path.visited get() = (pathInfo[this] ?: Info(0)).visited
+val Path.fileCount get() = (pathInfo[this] ?: Info(0)).fileCount
 
 System.setOut(PrintStream(FileOutputStream(result.toFile())))
 
@@ -30,35 +32,29 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
         return FileVisitResult.CONTINUE
     }
 
-    private fun terminalFor(dir: Path): String {
-        val (fileCount, visited) = dir.parent.info
-        return if (visited < fileCount) "├──" else "└──"
-    }
-
     override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
         printLineageOf(file)
         println("${terminalFor(file)} ${file.fileName}")
         return FileVisitResult.CONTINUE
     }
 
-    private fun printLineageOf(file: Path) {
-        val depth = (file - root).size - 1
-        for (i in 1..depth) {
-            val parent = file.root.resolve(file.subpath(0, i))
-            val (fileCount, visited) = parent.info
-            if (visited < fileCount) print("│  ") else print("   ")
-        }
-        (file.parent ?: Path.of("")).info.visited++
-    }
-
-    override fun visitFileFailed(file: Path, exc: IOException?): FileVisitResult {
-        println("Failed to visit $file")
-        return FileVisitResult.CONTINUE
-    }
+    override fun visitFileFailed(f: Path, exc: IOException) = FileVisitResult.CONTINUE
 
     override fun postVisitDirectory(dir: Path, exc: IOException?): FileVisitResult {
-        if (dir.info.fileCount < 1) print("   └── .: Empty :.")
+        if (dir.fileCount < 1) print("   └── .: Empty :.")
         pathInfo.remove(dir)
         return FileVisitResult.CONTINUE
     }
 })
+
+fun printLineageOf(file: Path) {
+    val depth = (file - root).size - 1
+    for (i in 1..depth) print(lineageOf(file.subPathBefore(i)))
+    (file.parent ?: Path.of("")).info.visited++
+}
+
+fun Path.subPathBefore(endIndex: Int) = root.resolve(subpath(0, endIndex))
+
+fun terminalFor(dir: Path) = if (dir.parent.visited < dir.parent.fileCount) "├──" else "└──"
+
+fun lineageOf(file: Path) = if (file.visited < file.fileCount) "│  " else "   "
