@@ -9,22 +9,35 @@ import java.nio.file.attribute.BasicFileAttributes
 
 println("D:/ ┐")
 Files.walkFileTree(Path.of("D:/Music/"), object : FileVisitor<Path> {
+
+    val info = mutableMapOf<Path, MutableList<Long>>() // processed, total
+
     override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
+        val childCount = Files.list(dir).count()
+        info.putIfAbsent(dir, mutableListOf(childCount, 0))
+        info[dir.parent]?.set(1, info[dir.parent]!![1] + 1)
+
         val depth = dir.nameCount
         for (i in 1..depth) {
             print("   ")
         }
         println("├── ${dir.fileName}")
+
         return FileVisitResult.CONTINUE
     }
 
     override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
         val depth = file.nameCount
+        info[file.parent]?.set(1, info[file.parent]!![1] + 1)
         for (i in 1 until depth) {
             print("   ")
         }
         print("│  ")
-        println("└── ${file.fileName}")
+        if (info[file.parent]!![0] > info[file.parent]!![1]) {
+            println("├── ${file.fileName}")
+        } else {
+            println("└── ${file.fileName}")
+        }
         return FileVisitResult.CONTINUE
     }
 
@@ -34,6 +47,10 @@ Files.walkFileTree(Path.of("D:/Music/"), object : FileVisitor<Path> {
     }
 
     override fun postVisitDirectory(dir: Path, exc: IOException?): FileVisitResult {
+        if (info[dir]!!.first() < 1) {
+            print("   └── .: Empty :.")
+        }
+        info.remove(dir)
         return FileVisitResult.CONTINUE
     }
 })
