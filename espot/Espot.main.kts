@@ -1,6 +1,8 @@
 @file:CompilerOptions("-jvm-target", "11")
 
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.PrintStream
 import java.nio.file.FileVisitResult
 import java.nio.file.FileVisitor
 import java.nio.file.Files
@@ -10,9 +12,12 @@ import java.nio.file.attribute.BasicFileAttributes
 data class Info(val fileCount: Long, var visited: Int = 0)
 
 val root = Path.of("D:/Music/")
+val result = Path.of("result.txt")
 val pathInfo = mutableMapOf<Path, Info>()
 val folderSymbol = "🗁"
 val Path.info get() = pathInfo[this] ?: Info(0)
+
+System.setOut(PrintStream(FileOutputStream(result.toFile())))
 
 Files.walkFileTree(root, object : FileVisitor<Path> {
 
@@ -43,7 +48,7 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
             val (fileCount, visited) = parent.info
             if (visited < fileCount) print("│  ") else print("   ")
         }
-        file.parent.info.visited++
+        (file.parent ?: Path.of("")).info.visited++
     }
 
     override fun visitFileFailed(file: Path, exc: IOException?): FileVisitResult {
