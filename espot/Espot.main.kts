@@ -20,7 +20,7 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
         print("   ")
         val depth = (dir - root).size
         for (i in 2..depth) {
-            val parent = dir.root.resolve(dir.subpath(0, i))
+            val parent = dir.root.resolve(dir.subpath(0, i - 1))
             if (info[parent]!![1] < info[parent]!![0]) {
                 print("│  ")
             } else {
@@ -28,7 +28,11 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
             }
         }
         info[dir.parent]?.set(1, info[dir.parent]!![1] + 1)
-        println("├── \uD83D\uDDC1 ${dir.fileName}")
+        if (dir == root || info[dir.parent]!![0] <= info[dir.parent]!![1]) {
+            println("└── \uD83D\uDDC1 ${dir.fileName}")
+        } else {
+            println("├── \uD83D\uDDC1 ${dir.fileName}")
+        }
 
         return FileVisitResult.CONTINUE
     }
@@ -37,7 +41,7 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
         print("   ")
         val depth = (file - root).size
         for (i in 2..depth) {
-            val parent = file.root.resolve(file.subpath(0, i))
+            val parent = file.root.resolve(file.subpath(0, i - 1))
             if (info[parent]!![1] < info[parent]!![0]) {
                 print("│  ")
             } else {
