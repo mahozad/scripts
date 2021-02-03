@@ -19,23 +19,24 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
     override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
         val childCount = Files.list(dir).count()
         pathInfo.putIfAbsent(dir, Info(childCount))
-        printBranches(dir)
-        val (fileCount, visited) = dir.parent.info
-        val terminal =  if (dir == root || visited >= fileCount) "└──" else "├──"
-        println("$terminal $folderSymbol ${dir.fileName}")
+        printLineageOf(dir)
+        val prefix = if (dir == root) "✱" else "${terminalFor(dir)} $folderSymbol"
+        println("$prefix ${dir.fileName}")
         return FileVisitResult.CONTINUE
+    }
+
+    private fun terminalFor(dir: Path): String {
+        val (fileCount, visited) = dir.parent.info
+        return if (visited < fileCount) "├──" else "└──"
     }
 
     override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
-        printBranches(file)
-        val (fileCount, visited) = file.parent.info
-        val terminal = if (visited < fileCount) "├── " else "└── "
-        println("$terminal${file.fileName}")
+        printLineageOf(file)
+        println("${terminalFor(file)} ${file.fileName}")
         return FileVisitResult.CONTINUE
     }
 
-    private fun printBranches(file: Path) {
-        if (file != root) print("   ")
+    private fun printLineageOf(file: Path) {
         val depth = (file - root).size - 1
         for (i in 1..depth) {
             val parent = file.root.resolve(file.subpath(0, i))
