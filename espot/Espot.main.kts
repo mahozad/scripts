@@ -7,8 +7,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 
-println("D:/ ┐")
-Files.walkFileTree(Path.of("D:/Music/"), object : FileVisitor<Path> {
+val root = Path.of("D:/Music/")
+
+Files.walkFileTree(root, object : FileVisitor<Path> {
 
     val info = mutableMapOf<Path, MutableList<Long>>() // processed, total
 
@@ -17,9 +18,14 @@ Files.walkFileTree(Path.of("D:/Music/"), object : FileVisitor<Path> {
         info.putIfAbsent(dir, mutableListOf(childCount, 0))
         info[dir.parent]?.set(1, info[dir.parent]!![1] + 1)
 
-        val depth = dir.nameCount
+        val depth = (dir - root).size
         for (i in 1..depth) {
-            print("   ")
+            val parent = dir.root.resolve(dir.subpath(0, dir.count() - depth))
+            if (info[parent]!![0] > info[parent]!![1]) {
+                print("│  ")
+            } else {
+                print("   ")
+            }
         }
         println("├── ${dir.fileName}")
 
@@ -28,16 +34,20 @@ Files.walkFileTree(Path.of("D:/Music/"), object : FileVisitor<Path> {
 
     override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
         val depth = file.nameCount
-        info[file.parent]?.set(1, info[file.parent]!![1] + 1)
         for (i in 1 until depth) {
-            print("   ")
+            val parent = file.root.resolve(file.subpath(0, file.count() - i))
+            if (info[parent]!![0] > info[parent]!![1]) {
+                print("│  ")
+            } else {
+                print("   ")
+            }
         }
-        print("│  ")
         if (info[file.parent]!![0] > info[file.parent]!![1]) {
             println("├── ${file.fileName}")
         } else {
             println("└── ${file.fileName}")
         }
+        info[file.parent]?.set(1, info[file.parent]!![1] + 1)
         return FileVisitResult.CONTINUE
     }
 
