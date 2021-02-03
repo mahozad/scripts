@@ -1,0 +1,13 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <clipPath id="clip">
+    <path d="m3 0 15 12-15 12h18v-24z"/>
+  </clipPath>
+  <path fill="#2ee56f" d="m3 3 12 9-12 9z"/>
+  <g clip-path="url(#clip)">
+    <path id="line" fill="none" stroke="#a3cf71" stroke-width="2" d="m3 4h18"/>
+    <use xlink:href="#line" y="4"/>
+    <use xlink:href="#line" y="8"/>
+    <use xlink:href="#line" y="12"/>
+    <use xlink:href="#line" y="16"/>
+  </g>
+</svg>
