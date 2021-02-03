@@ -27,7 +27,7 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
                 print("   ")
             }
         }
-        println("├── ${dir.fileName}")
+        println("├── \uD83D\uDDC1 ${dir.fileName}")
 
         return FileVisitResult.CONTINUE
     }
@@ -42,12 +42,12 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
                 print("   ")
             }
         }
+        info[file.parent]?.set(1, info[file.parent]!![1] + 1)
         if (info[file.parent]!![0] > info[file.parent]!![1]) {
             println("├── ${file.fileName}")
         } else {
             println("└── ${file.fileName}")
         }
-        info[file.parent]?.set(1, info[file.parent]!![1] + 1)
         return FileVisitResult.CONTINUE
     }
 
