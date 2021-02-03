@@ -7,31 +7,30 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 
+data class Info(val fileCount: Long, var visited: Int = 0)
+
 val root = Path.of("D:/Music/")
+val pathInfo = mutableMapOf<Path, Info>()
+val folderSymbol = "🗁"
+val Path.info get() = pathInfo[this] ?: Info(0)
 
 Files.walkFileTree(root, object : FileVisitor<Path> {
 
-    val info = mutableMapOf<Path, MutableList<Long>>() // processed, total
-
     override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
         val childCount = Files.list(dir).count()
-        info.putIfAbsent(dir, mutableListOf(childCount, 0))
+        pathInfo.putIfAbsent(dir, Info(childCount))
         printBranches(dir)
-        if (dir == root || info[dir.parent]!![0] <= info[dir.parent]!![1]) {
-            println("└── \uD83D\uDDC1 ${dir.fileName}")
-        } else {
-            println("├── \uD83D\uDDC1 ${dir.fileName}")
-        }
+        val (fileCount, visited) = dir.parent.info
+        val terminal =  if (dir == root || visited >= fileCount) "└──" else "├──"
+        println("$terminal $folderSymbol ${dir.fileName}")
         return FileVisitResult.CONTINUE
     }
 
     override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
         printBranches(file)
-        if (info[file.parent]!![0] > info[file.parent]!![1]) {
-            println("├── ${file.fileName}")
-        } else {
-            println("└── ${file.fileName}")
-        }
+        val (fileCount, visited) = file.parent.info
+        val terminal = if (visited < fileCount) "├── " else "└── "
+        println("$terminal${file.fileName}")
         return FileVisitResult.CONTINUE
     }
 
@@ -40,9 +39,10 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
         val depth = (file - root).size - 1
         for (i in 1..depth) {
             val parent = file.root.resolve(file.subpath(0, i))
-            if (info[parent]!![1] < info[parent]!![0]) print("│  ") else print("   ")
+            val (fileCount, visited) = parent.info
+            if (visited < fileCount) print("│  ") else print("   ")
         }
-        info[file.parent]?.set(1, info[file.parent]!![1] + 1)
+        file.parent.info.visited++
     }
 
     override fun visitFileFailed(file: Path, exc: IOException?): FileVisitResult {
@@ -51,8 +51,8 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
     }
 
     override fun postVisitDirectory(dir: Path, exc: IOException?): FileVisitResult {
-        if (info[dir]!!.first() < 1) print("   └── .: Empty :.")
-        info.remove(dir)
+        if (dir.info.fileCount < 1) print("   └── .: Empty :.")
+        pathInfo.remove(dir)
         return FileVisitResult.CONTINUE
     }
 })
