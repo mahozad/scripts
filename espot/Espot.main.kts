@@ -9,7 +9,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 
-data class Info(val fileCount: Long, var visited: Int = 0)
+data class Info(val fileCount: Int, var visited: Int = 0)
 
 val folderSymbol = "🗁"
 val root = Path.of("D:/Music/")
@@ -24,7 +24,7 @@ System.setOut(PrintStream(FileOutputStream(result.toFile())))
 Files.walkFileTree(root, object : FileVisitor<Path> {
 
     override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
-        val childCount = Files.list(dir).count()
+        val childCount = Files.list(dir).count().toInt()
         pathInfo.putIfAbsent(dir, Info(childCount))
         printLineageOf(dir)
         val prefix = if (dir == root) "✱" else "${terminalFor(dir)} $folderSymbol"
@@ -41,7 +41,7 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
     override fun visitFileFailed(f: Path, exc: IOException) = FileVisitResult.CONTINUE
 
     override fun postVisitDirectory(dir: Path, exc: IOException?): FileVisitResult {
-        if (dir.fileCount < 1) print("   └── .: Empty :.")
+        if (dir.fileCount == 0) print("   └── .: Empty :.")
         pathInfo.remove(dir)
         return FileVisitResult.CONTINUE
     }
