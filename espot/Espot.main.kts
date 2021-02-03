@@ -20,7 +20,7 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
 
         val depth = (dir - root).size
         for (i in 1..depth) {
-            val parent = dir.root.resolve(dir.subpath(0, dir.count() - depth))
+            val parent = dir.root.resolve(dir.subpath(0, dir.count() - i))
             if (info[parent]!![0] > info[parent]!![1]) {
                 print("│  ")
             } else {
@@ -33,8 +33,8 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
     }
 
     override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
-        val depth = file.nameCount
-        for (i in 1 until depth) {
+        val depth = (file - root).size
+        for (i in 1..depth) {
             val parent = file.root.resolve(file.subpath(0, file.count() - i))
             if (info[parent]!![0] > info[parent]!![1]) {
                 print("│  ")
