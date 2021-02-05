@@ -50,7 +50,7 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
 fun printLineageOf(file: Path) {
     val depth = (file - root).size - 1
     for (i in 1..depth) print(lineageOf(file.subPathBefore(i)))
-    (file.parent ?: Path.of("")).info.visited++
+    file.parent?.let { it.info.visited++ }
 }
 
 fun Path.subPathBefore(endIndex: Int) = root.resolve(subpath(0, endIndex))
