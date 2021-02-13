@@ -22,3 +22,14 @@ git commit -m "Update summodule-x pointer to latest commit"
 ```
 
 See [this post](https://stackoverflow.com/a/8191413) for more info
+
+---
+
+We can access the script class instance like follows:
+  1. this@*file name with first letter capitalized and words separated with underscore*  
+     For example for a script named *compare-wiki.main.kts*: `this@Compare_wiki_main`
+  2. Call the main function from another file (like a unit test)  
+     For example to call method `setup()` in a script named *compare-wiki.main.kts*:
+     `Compare_wiki_main(arrayOf("program args")).setup()`
+
+---
