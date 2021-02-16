@@ -1,0 +1,23 @@
+plugins { id "org.jetbrains.kotlin.jvm" version "1.4.30" }
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+sourceSets.test.kotlin.srcDirs = ["test"]
+sourceSets.main.kotlin.srcDirs = ["src"]
+
+test { useJUnitPlatform() }
+
+wrapper { gradleVersion = 6.8 }
+
+dependencies {
+    // To align versions of all Kotlin components
+    implementation platform("org.jetbrains.kotlin:kotlin-bom")
+    // Refer to kotlin-bom file for info about script dependencies https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-bom/1.4.30/kotlin-bom-1.4.30.pom
+    implementation "org.jetbrains.kotlin:kotlin-main-kts"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.7.1"
+    testImplementation "io.mockk:mockk:1.10.5"
+}
