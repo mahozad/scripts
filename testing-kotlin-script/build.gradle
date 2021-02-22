@@ -1,12 +1,14 @@
-plugins { id "org.jetbrains.kotlin.jvm" version "1.4.30" }
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.4.30"
+}
 
 repositories {
     jcenter()
     mavenCentral()
 }
 
-sourceSets.test.kotlin.srcDirs = ["test"]
 sourceSets.main.kotlin.srcDirs = ["src"]
+sourceSets.test.kotlin.srcDirs = ["test"]
 
 test { useJUnitPlatform() }
 
@@ -17,10 +19,8 @@ dependencies {
         because("We want to align versions of all Kotlin dependencies (== Kotlin plugin version)")
     }
     implementation("org.jetbrains.kotlin:kotlin-main-kts") {
-        because("We want to be able to use features like @file:Dependency in the script and also to remove the IntelliJ false errors in the test class. Refer to kotlin-bom file for info about script dependencies: https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-bom/1.4.30/kotlin-bom-1.4.30.pom")
+        because("We want to use features like @file:Dependency in the script and also remove IntelliJ false errors in the test class")
     }
     testImplementation "org.junit.jupiter:junit-jupiter:5.7.1"
     testImplementation "org.assertj:assertj-core:3.19.0"
-    // testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
-    // testImplementation "io.mockk:mockk:1.10.5"
 }
