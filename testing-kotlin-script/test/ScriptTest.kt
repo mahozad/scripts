@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 class ScriptTest {
 
     @Test
-    fun firstTest() {
+    fun `OS should be Windows`() {
         val os = Script_main(emptyArray()).getEnvironmentVariable("OS")
         assertThat(os).isEqualTo("Windows_NT") // Using AssertJ assertion
         assertEquals("Windows_NT", os) // Using JUnit assertion
