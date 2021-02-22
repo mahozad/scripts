@@ -1,17 +1,21 @@
-# Github Action Written in Kotlin (Scripting)
-The script file is [action.main.kts](src/action.main.kts).  
-See [the example workflow](.github/workflows/main.yml) for how to use the action.
+# Example of a Kotlin Script and How to Write Tests for It
 
-###
+The script file is [script.main.kts](src/script.main.kts) located in *src* directory.  
+The test file is [ScriptTest.kt](test/ScriptTest.kt) located in *test* directory.  
+See the Gradle [build](build.gradle) file for dependencies and libraries used.
 
-Note that kotlin annotations didn't work in testing. Some additional kotlin dependency for tests are required.
+Run the tests using Gradle *test* task:
 
-### Manually Adding Test Sources in IntelliJ
-
-Created the *test* directory and then in IntelliJ marked it as *Test Sources Root*.  
-Then in *Project Structure* 🡲 *Modules* 🡲 *Dependencies* 🡲 *+* 🡲 *Library...* 🡲
-*New Library...* 🡲 *From Maven...* 🡲 Search `org.junit.jupiter:junit-jupiter-api:5.7.0`
-🡲 *OK* 🡲 Select *Add Selected* 🡲 And set the scope to *Test*.
+```shell
+gradlew test
+```
 
 ---
 
+### Manually Adding Test Sources and Dependencies in IntelliJ IDEA
+
+If you do not want to use Gradle, then follow these steps to create test sources:  
+Created the *test* directory and then in IntelliJ marked it as *Test Sources Root*.  
+Then in *Project Structure* 🡲 *Modules* 🡲 *Dependencies* 🡲 *+* 🡲 *Library...* 🡲
+*New Library...* 🡲 *From Maven...* 🡲 Search `org.junit.jupiter:junit-jupiter-api:5.7.0`
+🡲 *OK* 🡲 *Add Selected* 🡲 And set the scope to *Test*.
