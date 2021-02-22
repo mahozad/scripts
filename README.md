@@ -1,5 +1,5 @@
 Added the [Git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) with this command:
-```bash
+```shell
 git submodule add https://github.com/mahozad/<repo-name> <optional-folder-name>
 ```
 ... and also added its folder to IntelliJ in `Settings` 🡲 `Version Control`. 
@@ -14,7 +14,7 @@ This means an update will only be performed if the submodule reference changes i
 
 Update the pointer to another commit of the submodule-x by running these commands:
 
-```bash
+```shell
 git submodule update --remote --merge
 git status
 git add submodule-x
