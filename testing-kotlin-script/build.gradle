@@ -13,11 +13,14 @@ test { useJUnitPlatform() }
 wrapper { gradleVersion = 6.8 }
 
 dependencies {
-    // To align versions of all Kotlin components
-    implementation platform("org.jetbrains.kotlin:kotlin-bom")
-    // Refer to kotlin-bom file for info about script dependencies https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-bom/1.4.30/kotlin-bom-1.4.30.pom
-    implementation "org.jetbrains.kotlin:kotlin-main-kts"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom")) {
+        because("We want to align versions of all Kotlin dependencies (== Kotlin plugin version)")
+    }
+    implementation("org.jetbrains.kotlin:kotlin-main-kts") {
+        because("We want to be able to use features like @file:Dependency in the script and also to remove the IntelliJ false errors in the test class. Refer to kotlin-bom file for info about script dependencies: https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-bom/1.4.30/kotlin-bom-1.4.30.pom")
+    }
     testImplementation "org.junit.jupiter:junit-jupiter:5.7.1"
-    testImplementation "io.mockk:mockk:1.10.5"
+    testImplementation "org.assertj:assertj-core:3.19.0"
+    // testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
+    // testImplementation "io.mockk:mockk:1.10.5"
 }
