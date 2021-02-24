@@ -23,26 +23,24 @@ System.setOut(PrintStream(FileOutputStream(result.toFile())))
 
 Files.walkFileTree(root, object : FileVisitor<Path> {
 
-    override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
-        val childCount = Files.list(dir).count().toInt()
-        pathInfo.putIfAbsent(dir, Info(childCount))
-        printLineageOf(dir)
-        val prefix = if (dir == root) "✱" else "${terminalFor(dir)} $folderSymbol"
-        println("$prefix ${dir.fileName}")
+    override fun preVisitDirectory(p: Path, attrs: BasicFileAttributes): FileVisitResult {
+        pathInfo[p] = Info(Files.list(p).count().toInt())
+        printLineageOf(p)
+        println("${prefixFor(p)} ${p.fileName}")
         return FileVisitResult.CONTINUE
     }
 
-    override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
-        printLineageOf(file)
-        println("${terminalFor(file)} ${file.fileName}")
+    override fun visitFile(p: Path, attrs: BasicFileAttributes): FileVisitResult {
+        printLineageOf(p)
+        println("${terminalFor(p)} ${p.fileName}")
         return FileVisitResult.CONTINUE
     }
 
-    override fun visitFileFailed(f: Path, exc: IOException) = FileVisitResult.CONTINUE
+    override fun visitFileFailed(p: Path, exc: IOException) = FileVisitResult.CONTINUE
 
-    override fun postVisitDirectory(dir: Path, exc: IOException?): FileVisitResult {
-        if (dir.fileCount == 0) print("   └── .: Empty :.")
-        pathInfo.remove(dir)
+    override fun postVisitDirectory(p: Path, exc: IOException?): FileVisitResult {
+        if (p.fileCount == 0) print("   └── .: Empty :.")
+        pathInfo.remove(p)
         return FileVisitResult.CONTINUE
     }
 })
@@ -55,6 +53,8 @@ fun printLineageOf(file: Path) {
 
 fun Path.subPathBefore(endIndex: Int) = root.resolve(subpath(0, endIndex))
 
-fun terminalFor(dir: Path) = if (dir.parent.visited < dir.parent.fileCount) "├──" else "└──"
+fun lineageOf(p: Path) = if (p.visited < p.fileCount) "│  " else "   "
 
-fun lineageOf(file: Path) = if (file.visited < file.fileCount) "│  " else "   "
+fun prefixFor(p: Path) = if (p == root) "✱" else "${terminalFor(p)} $folderSymbol"
+
+fun terminalFor(p: Path) = if (p.parent.visited < p.parent.fileCount) "├──" else "└──"
