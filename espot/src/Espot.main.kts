@@ -15,14 +15,12 @@ val folderSymbol = "🗁"
 val root = Path.of("D:/Music/")
 val result = Path.of("result.txt")
 val pathInfo = mutableMapOf<Path, Info>()
-val Path.info get() = pathInfo[this] ?: Info(0)
 val Path.visited get() = pathInfo[this]?.visited ?: 0
 val Path.fileCount get() = pathInfo[this]?.fileCount ?: 0
 
 System.setOut(PrintStream(FileOutputStream(result.toFile())))
 
 Files.walkFileTree(root, object : FileVisitor<Path> {
-
     override fun preVisitDirectory(p: Path, attrs: BasicFileAttributes): FileVisitResult {
         pathInfo[p] = Info(Files.list(p).count().toInt())
         printLineageOf(p)
@@ -48,7 +46,7 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
 fun printLineageOf(file: Path) {
     val depth = (file - root).size - 1
     for (i in 1..depth) print(lineageOf(file.subPathBefore(i)))
-    file.parent?.let { it.info.visited++ }
+    pathInfo[file.parent]?.let { it.visited++ }
 }
 
 fun Path.subPathBefore(endIndex: Int) = root.resolve(subpath(0, endIndex))
