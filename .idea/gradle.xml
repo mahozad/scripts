@@ -11,6 +11,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/commit-log-extractor" />
             <option value="$PROJECT_DIR$/espot" />
           </set>
         </option>

@@ -1,2 +1,3 @@
 rootProject.name = "scripts"
 include ":espot"
+include ":commit-log-extractor"
