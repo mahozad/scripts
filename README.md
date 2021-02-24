@@ -1,3 +1,11 @@
+To run kotlin scripts with Gradle see [this GitHub gist](https://gist.github.com/bamboo/f29e738c2a17a36e87c814b7452afe31).  
+Can scripts be run by adding Gradle *application* plugin?  
+Create a Gradle task of type *Exec*.  
+See [this approach](https://kotlinexpertise.com/execute-kotlin-scripts-with-gradle/).  
+Also [this SO post](https://stackoverflow.com/q/34974039) might be helpful.
+
+---
+
 Added the [Git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) with this command:
 ```shell
 git submodule add https://github.com/mahozad/<repo-name> <optional-folder-name>
