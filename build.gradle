@@ -1,0 +1,34 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.4.30"
+}
+
+wrapper {
+    gradleVersion = 6.8
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: "org.jetbrains.kotlin.jvm"
+
+    compileKotlin { kotlinOptions.jvmTarget = "11" }
+
+    test { useJUnitPlatform() }
+
+    dependencies {
+        implementation(platform("org.jetbrains.kotlin:kotlin-bom")) {
+            because("We want to align versions of all Kotlin dependencies (== Kotlin plugin version)")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-main-kts") {
+            because("We want to use features like @file:Dependency in the script and also remove IntelliJ false errors in the test class")
+        }
+        testImplementation "org.junit.jupiter:junit-jupiter:5.7.1"
+        testImplementation "org.assertj:assertj-core:3.19.0"
+    }
+}
