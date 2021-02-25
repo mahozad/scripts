@@ -7,6 +7,8 @@ import java.time.Instant
 
 class Test {
 
+    // NOTE: The paths passed to the program should be absolute
+
     @Test
     fun `script should be fast`() {
         val root = Path.of("test/hierarchy-1/")
