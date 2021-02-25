@@ -18,6 +18,7 @@ val pathInfo = mutableMapOf<Path, Info>()
 val Path.visited get() = pathInfo[this]?.visited ?: 0
 val Path.fileCount get() = pathInfo[this]?.fileCount ?: 0
 
+// NOTE: Wrap in a BufferedOutputStream to increase performance. Do not forget to close!
 System.setOut(PrintStream(FileOutputStream(result.toFile())))
 
 Files.walkFileTree(seed, object : FileVisitor<Path> {
