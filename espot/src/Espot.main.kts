@@ -23,30 +23,31 @@ System.setOut(PrintStream(FileOutputStream(result.toFile())))
 Files.walkFileTree(root, object : FileVisitor<Path> {
     override fun preVisitDirectory(p: Path, attrs: BasicFileAttributes): FileVisitResult {
         pathInfo[p] = Info(Files.list(p).count().toInt())
-        printLineageOf(p)
+        processLineageOf(p)
         println("${prefixFor(p)} ${p.fileName}")
         return FileVisitResult.CONTINUE
     }
 
     override fun visitFile(p: Path, attrs: BasicFileAttributes): FileVisitResult {
-        printLineageOf(p)
+        processLineageOf(p)
         println("${terminalFor(p)} ${p.fileName}")
         return FileVisitResult.CONTINUE
     }
 
-    override fun visitFileFailed(p: Path, exc: IOException) = FileVisitResult.CONTINUE
+    override fun visitFileFailed(p: Path, e: IOException) = FileVisitResult.CONTINUE
 
-    override fun postVisitDirectory(p: Path, exc: IOException?): FileVisitResult {
+    override fun postVisitDirectory(p: Path, e: IOException?): FileVisitResult {
         if (p.fileCount == 0) print("   └── .: Empty :.")
         pathInfo.remove(p)
         return FileVisitResult.CONTINUE
     }
 })
 
-fun printLineageOf(file: Path) {
-    val depth = (file - root).size - 1
-    for (i in 1..depth) print(lineageOf(file.subPathBefore(i)))
-    pathInfo[file.parent]?.let { it.visited++ }
+fun processLineageOf(p: Path) {
+    val depth = (p - root).size - 1
+    for (i in 1..depth)
+        print(lineageOf(p.subPathBefore(i)))
+    pathInfo[p.parent]?.let { it.visited++ }
 }
 
 fun Path.subPathBefore(endIndex: Int) = root.resolve(subpath(0, endIndex))
