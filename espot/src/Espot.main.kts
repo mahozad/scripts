@@ -12,8 +12,8 @@ import java.nio.file.attribute.BasicFileAttributes
 data class Info(val fileCount: Int, var visited: Int = 0)
 
 val folderSymbol = "🗁"
-val root = Path.of("D:/Music/")
-val result = Path.of("result.txt")
+val root = Path.of(args[0])
+val result = Path.of(args[1])
 val pathInfo = mutableMapOf<Path, Info>()
 val Path.visited get() = pathInfo[this]?.visited ?: 0
 val Path.fileCount get() = pathInfo[this]?.fileCount ?: 0
