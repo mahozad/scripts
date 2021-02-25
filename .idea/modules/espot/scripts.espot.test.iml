@@ -12,5 +12,4 @@
     <orderEntry type="module" module-name="scripts.espot.main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.4.30" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="scripts.espot.main" />
 </module>
