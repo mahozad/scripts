@@ -12,7 +12,7 @@ import java.nio.file.attribute.BasicFileAttributes
 data class Info(val fileCount: Int, var visited: Int = 0)
 
 val folderSymbol = "🗁"
-val root = Path.of(args[0])
+val seed = Path.of(args[0])
 val result = Path.of(args[1])
 val pathInfo = mutableMapOf<Path, Info>()
 val Path.visited get() = pathInfo[this]?.visited ?: 0
@@ -20,7 +20,7 @@ val Path.fileCount get() = pathInfo[this]?.fileCount ?: 0
 
 System.setOut(PrintStream(FileOutputStream(result.toFile())))
 
-Files.walkFileTree(root, object : FileVisitor<Path> {
+Files.walkFileTree(seed, object : FileVisitor<Path> {
     override fun preVisitDirectory(p: Path, attrs: BasicFileAttributes): FileVisitResult {
         pathInfo[p] = Info(Files.list(p).count().toInt())
         processLineageOf(p)
@@ -47,16 +47,16 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
 })
 
 fun processLineageOf(p: Path) {
-    val depth = (p - root).size - 2
-    for (i in 0..depth)
-        print(lineageOf(p.subPathBefore(root.count() + i)))
     pathInfo[p.parent]?.let { it.visited++ }
+    val depth = (p - seed).size - 2
+    for (i in 0..depth)
+        print(lineageOf(p.ancestor(i)))
 }
 
-fun Path.subPathBefore(endIndex: Int) = root.resolve(subpath(0, endIndex))
+fun Path.ancestor(i: Int) = root.resolve(subpath(0, seed.count() + i))
 
 fun lineageOf(p: Path) = if (p.visited < p.fileCount) "│  " else "   "
 
-fun prefixFor(p: Path) = if (p == root) "✱" else "${terminalFor(p)} $folderSymbol"
+fun prefixFor(p: Path) = if (p == seed) "✱" else "${terminalFor(p)} $folderSymbol"
 
 fun terminalFor(p: Path) = if (p.parent.visited < p.parent.fileCount) "├──" else "└──"
