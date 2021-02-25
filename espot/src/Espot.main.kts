@@ -1,3 +1,4 @@
+@file:JvmName("Espot")
 @file:CompilerOptions("-jvm-target", "11")
 
 import java.io.FileOutputStream
