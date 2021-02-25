@@ -45,4 +45,31 @@ class Test {
 
         assertThat(Files.readString(result)).isEqualTo(expected)
     }
+
+    @Test
+    fun `check result for hierarchy 3`() {
+        val root = Path.of("test/hierarchy-3/")
+        val result = Path.of("result.txt")
+        val args = arrayOf("${root.toAbsolutePath()}", "${result.toAbsolutePath()}")
+        val expected = Files.readString(Path.of("test/expected-result-3.txt"))
+
+        Espot_main(args)
+
+        assertThat(Files.readString(result)).isEqualTo(expected)
+    }
+
+    @Test
+    fun `check result for hierarchy 4`() {
+        val root = Path.of("test/hierarchy-4/")
+        // Ensure the empty directory exists because couldn't commit it to Git
+        Files.deleteIfExists(root)
+        Files.createDirectory(root)
+        val result = Path.of("result.txt")
+        val args = arrayOf("${root.toAbsolutePath()}", "${result.toAbsolutePath()}")
+        val expected = Files.readString(Path.of("test/expected-result-4.txt"))
+
+        Espot_main(args)
+
+        assertThat(Files.readString(result)).isEqualTo(expected)
+    }
 }
