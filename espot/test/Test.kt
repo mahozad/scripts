@@ -1,9 +1,26 @@
+@file:Suppress("unused", "HasPlatformType")
+
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
+import kotlin.streams.*
+
+var i = 1
+
+fun argProvider() = File("test")
+    .listFiles()!!
+    .sorted()
+    .filter { it.name.startsWith("seed") }
+    .map(File::toPath)
+    .map(Path::toAbsolutePath)
+    .map { Arguments.of(it, File("test/expected-result-${i++}.txt").readText()) }
 
 class Test {
 
@@ -11,65 +28,34 @@ class Test {
 
     @Test
     fun `script should be fast`() {
-        val root = Path.of("test/hierarchy-1/")
+        val seed = Path.of("test/seed-1/")
         val result = Path.of("result.txt")
-        val args = arrayOf("${root.toAbsolutePath()}", "${result.toAbsolutePath()}")
-
+        val args = arrayOf("${seed.toAbsolutePath()}", "${result.toAbsolutePath()}")
         val startTime = Instant.now()
         Espot_main(args)
         val duration = Duration.between(startTime, Instant.now())
-
         assertThat(duration).isLessThan(Duration.ofMillis(50))
     }
 
     @Test
-    fun `check result for hierarchy 1`() {
-        val root = Path.of("test/hierarchy-1/")
-        val result = Path.of("result.txt")
-        val args = arrayOf("${root.toAbsolutePath()}", "${result.toAbsolutePath()}")
-        val expected = Files.readString(Path.of("test/expected-result-1.txt"))
-
-        Espot_main(args)
-
-        assertThat(Files.readString(result)).isEqualTo(expected)
-    }
-
-    @Test
-    fun `check result for hierarchy 2`() {
-        val root = Path.of("test/hierarchy-2/")
-        val result = Path.of("result.txt")
-        val args = arrayOf("${root.toAbsolutePath()}", "${result.toAbsolutePath()}")
-        val expected = Files.readString(Path.of("test/expected-result-2.txt"))
-
-        Espot_main(args)
-
-        assertThat(Files.readString(result)).isEqualTo(expected)
-    }
-
-    @Test
-    fun `check result for hierarchy 3`() {
-        val root = Path.of("test/hierarchy-3/")
-        val result = Path.of("result.txt")
-        val args = arrayOf("${root.toAbsolutePath()}", "${result.toAbsolutePath()}")
-        val expected = Files.readString(Path.of("test/expected-result-3.txt"))
-
-        Espot_main(args)
-
-        assertThat(Files.readString(result)).isEqualTo(expected)
-    }
-
-    @Test
-    fun `check result for hierarchy 4`() {
-        val root = Path.of("test/hierarchy-4/")
+    fun `check result for empty seed`() {
+        val seed = Path.of("test/seed-4/")
         // Ensure the empty directory exists because couldn't commit it to Git
-        Files.deleteIfExists(root)
-        Files.createDirectory(root)
+        Files.deleteIfExists(seed)
+        Files.createDirectory(seed)
         val result = Path.of("result.txt")
-        val args = arrayOf("${root.toAbsolutePath()}", "${result.toAbsolutePath()}")
+        val args = arrayOf("${seed.toAbsolutePath()}", "${result.toAbsolutePath()}")
         val expected = Files.readString(Path.of("test/expected-result-4.txt"))
-
         Espot_main(args)
+        assertThat(Files.readString(result)).isEqualTo(expected)
+    }
 
+    @ParameterizedTest(name = "check result for seed {index}")
+    @MethodSource("TestKt#argProvider")
+    fun `check result for seeds`(seed: Path, expected: String) {
+        val result = Path.of("result.txt")
+        val args = arrayOf("${seed.toAbsolutePath()}", "${result.toAbsolutePath()}")
+        Espot_main(args)
         assertThat(Files.readString(result)).isEqualTo(expected)
     }
 }
