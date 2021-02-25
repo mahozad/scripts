@@ -1,3 +1,7 @@
+The Gradle build file for scripts is mainly for the purpose of running their tests.
+
+---
+
 To run kotlin scripts with Gradle see [this GitHub gist](https://gist.github.com/bamboo/f29e738c2a17a36e87c814b7452afe31).  
 Can scripts be run by adding Gradle *application* plugin?  
 Create a Gradle task of type *Exec*.  
