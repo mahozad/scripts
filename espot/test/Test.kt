@@ -24,13 +24,11 @@ fun argProvider() = File("test")
 
 class Test {
 
-    // NOTE: The paths passed to the program should be absolute
-
     @Test
     fun `script should be fast`() {
         val seed = Path.of("test/seed-1/")
         val result = Path.of("result.txt")
-        val args = arrayOf("${seed.toAbsolutePath()}", "${result.toAbsolutePath()}")
+        val args = arrayOf("${seed.toAbsolutePath()}", "$result")
         val startTime = Instant.now()
         Espot_main(args)
         val duration = Duration.between(startTime, Instant.now())
@@ -44,7 +42,7 @@ class Test {
         Files.deleteIfExists(seed)
         Files.createDirectory(seed)
         val result = Path.of("result.txt")
-        val args = arrayOf("${seed.toAbsolutePath()}", "${result.toAbsolutePath()}")
+        val args = arrayOf("$seed", "$result")
         val expected = Files.readString(Path.of("test/expected-result-4.txt"))
         Espot_main(args)
         assertThat(Files.readString(result)).isEqualTo(expected)
@@ -54,7 +52,7 @@ class Test {
     @MethodSource("TestKt#argProvider")
     fun `check result for seeds`(seed: Path, expected: String) {
         val result = Path.of("result.txt")
-        val args = arrayOf("${seed.toAbsolutePath()}", "${result.toAbsolutePath()}")
+        val args = arrayOf("$seed", "$result")
         Espot_main(args)
         assertThat(Files.readString(result)).isEqualTo(expected)
     }
