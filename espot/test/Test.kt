@@ -33,4 +33,16 @@ class Test {
 
         assertThat(Files.readString(result)).isEqualTo(expected)
     }
+
+    @Test
+    fun `check result for hierarchy 2`() {
+        val root = Path.of("test/hierarchy-2/")
+        val result = Path.of("result.txt")
+        val args = arrayOf("${root.toAbsolutePath()}", "${result.toAbsolutePath()}")
+        val expected = Files.readString(Path.of("test/expected-result-2.txt"))
+
+        Espot_main(args)
+
+        assertThat(Files.readString(result)).isEqualTo(expected)
+    }
 }

@@ -1,0 +1,5 @@
+✱ hierarchy-2
+├── a.txt
+├── 🗁 b
+│  └── .: EMPTY :.
+└── c.txt

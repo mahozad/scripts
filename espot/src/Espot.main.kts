@@ -37,7 +37,10 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
     override fun visitFileFailed(p: Path, e: IOException) = FileVisitResult.CONTINUE
 
     override fun postVisitDirectory(p: Path, e: IOException?): FileVisitResult {
-        if (p.fileCount == 0) print("   └── .: Empty :.")
+        if (p.fileCount == 0) {
+            processLineageOf(p.resolve("EMPTY"))
+            println("└── .: EMPTY :.")
+        }
         pathInfo.remove(p)
         return FileVisitResult.CONTINUE
     }
