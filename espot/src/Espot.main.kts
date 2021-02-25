@@ -44,9 +44,9 @@ Files.walkFileTree(root, object : FileVisitor<Path> {
 })
 
 fun processLineageOf(p: Path) {
-    val depth = (p - root).size - 1
-    for (i in 1..depth)
-        print(lineageOf(p.subPathBefore(i)))
+    val depth = (p - root).size - 2
+    for (i in 0..depth)
+        print(lineageOf(p.subPathBefore(root.count() + i)))
     pathInfo[p.parent]?.let { it.visited++ }
 }
 
