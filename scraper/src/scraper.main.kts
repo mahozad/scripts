@@ -63,14 +63,12 @@ fun Char.getEntries(): List<Entry> {
 }
 
 val Entry.meaning: String
-    get() {
-        val content = Jsoup.connect("$baseUrl$url")
-            .userAgent("Mozilla")
-            .get()
-            .select(".content-wrapper")
-            .single()
-            .children()
-        content.removeIf { it.tagName() == "h1" } // Title
-        content.removeIf { it.text().contains("Author:") }
-        return content.text()
-    }
+    get() = Jsoup.connect("$baseUrl$url")
+        .userAgent("Mozilla")
+        .get()
+        .select(".content-wrapper")
+        .single()
+        .children()
+        .not("h1") // Title
+        .not(":contains(Author:)")
+        .text()
