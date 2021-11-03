@@ -62,6 +62,9 @@ fun Char.getEntries(): List<Entry> {
     return parser.parseArray(json) ?: error("Error parsing the JSON")
 }
 
+/**
+ * See [jsoup selector syntax](https://jsoup.org/cookbook/extracting-data/selector-syntax).
+ */
 val Entry.meaning: String
     get() = Jsoup.connect("$baseUrl$url")
         .userAgent("Mozilla")
