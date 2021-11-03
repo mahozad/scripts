@@ -12,7 +12,7 @@ import java.nio.file.attribute.BasicFileAttributes
 
 data class Info(val fileCount: Int, var visited: Int = 0)
 
-val folderSymbol = "🗁"
+val folderSymbol = "🗁" // 📂 📁 🗁 🗀
 val seed = Path.of(args[0])
 val result = Path.of(args[1])
 val pathInfo = mutableMapOf<Path, Info>()
