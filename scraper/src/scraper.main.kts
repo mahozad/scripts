@@ -19,7 +19,7 @@ import java.io.File
 import java.io.PrintStream
 
 val baseUrl = "https://www.mckinseyenergyinsights.com"
-val apiUrl = "https://www.mckinseyenergyinsights.com/Umbraco/Api/Glossary/GetKeywords"
+val apiUrl = "$baseUrl/Umbraco/Api/Glossary/GetKeywords"
 val output = File("result.txt")
 val parser = Klaxon()
 var totalWordCount = 0
@@ -53,15 +53,13 @@ fun Char.getEntries(): List<Entry> {
         .ignoreContentType(true)
         .post()
 
-    val json = document.body()
-        .toString()
-        .removePrefix("<body>")
-        .removeSuffix("</body>")
-        .replace("""{"keyWords":""", "")
-        .replace("]}", "]")
-        .trim()
+    val json = document
+        .body()
+        .text()
+        .removePrefix("""{"keyWords":""")
+        .removeSuffix("}")
 
-    return parser.parseArray(json) ?: error("Exception parsing the JSON")
+    return parser.parseArray(json) ?: error("Error parsing the JSON")
 }
 
 val Entry.meaning: String
@@ -72,7 +70,7 @@ val Entry.meaning: String
             .select(".content-wrapper")
             .single()
             .children()
-        content.removeIf { it.tagName() == "h1" } // title
+        content.removeIf { it.tagName() == "h1" } // Title
         content.removeIf { it.text().contains("Author:") }
         return content.text()
     }
