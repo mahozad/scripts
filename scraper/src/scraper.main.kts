@@ -22,19 +22,17 @@ val baseUrl = "https://www.mckinseyenergyinsights.com"
 val apiUrl = "$baseUrl/Umbraco/Api/Glossary/GetKeywords"
 val output = File("result.txt")
 val parser = Klaxon()
-var totalWordCount = 0
 
 data class Entry(val name: String, val url: String)
 
 System.setOut(PrintStream(output))
 // TODO: Use .parallelStream() or coroutines
-('A'..'Z')
+val totalWordCount = ('A'..'Z')
     .asSequence()
-    .onEach { println() }
-    .onEach { println("============ $it ============") }
+    .onEach { println("\n============ $it ============") }
     .flatMap { it.getEntries() }
-    .onEach { totalWordCount++ }
-    .forEach { println("* ${it.name}\t${it.meaning}") }
+    .onEach { println("* ${it.name}\t${it.meaning}") }
+    .count()
 println()
 println("---------------------------")
 println("Total word count: $totalWordCount")
