@@ -1,3 +1,4 @@
+
 ============ A ============
 * Absorbent	An absorbent is a liquid stream used in an absorption separation process to take up the component being separated.  
 * Absorption	Absorption is a type of separation process used in refining in which a component in a mixed stream is selectively taken up by a liquid stream (absorbed), separating it from other components in the mix. The absorbed chemical is typically then separated from the absorbing liquid (absorbent) by fractionation.  

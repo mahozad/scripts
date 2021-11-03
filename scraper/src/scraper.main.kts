@@ -27,16 +27,15 @@ var totalWordCount = 0
 data class Entry(val name: String, val url: String)
 
 System.setOut(PrintStream(output))
-for (character in 'A'..'Z') {
-    println("============ $character ============")
-    // TODO: Use .parallelStream() or coroutines
-    val entries = character.getEntries()
-    totalWordCount += entries.size
-    for (entry in entries) {
-        println("* ${entry.name}\t${entry.meaning}")
-    }
-    println()
-}
+// TODO: Use .parallelStream() or coroutines
+('A'..'Z')
+    .asSequence()
+    .onEach { println() }
+    .onEach { println("============ $it ============") }
+    .flatMap { it.getEntries() }
+    .onEach { totalWordCount++ }
+    .forEach { println("* ${it.name}\t${it.meaning}") }
+println()
 println("---------------------------")
 println("Total word count: $totalWordCount")
 
