@@ -13,15 +13,17 @@ import org.jsoup.Jsoup
 import java.io.File
 import java.io.PrintStream
 
-val apiUrl = "https://www.mckinseyenergyinsights.com/Umbraco/Api/Glossary/GetKeywords"
 val baseUrl = "https://www.mckinseyenergyinsights.com"
-
-val output = File("C:/Users/Mahdi/Desktop/result.txt")
-System.setOut(PrintStream(output))
-
+val apiUrl = "https://www.mckinseyenergyinsights.com/Umbraco/Api/Glossary/GetKeywords"
+val output = File("result.txt")
+val parser = Klaxon()
 var totalWordCount = 0
+
+data class Entry(val name: String, val url: String)
+
+System.setOut(PrintStream(output))
 for (character in 'A'..'Z') {
-    println("============$character============")
+    println("============ $character ============")
     // TODO: Use .parallelStream() or coroutines
     val entries = character.getEntries()
     totalWordCount += entries.size
@@ -30,10 +32,8 @@ for (character in 'A'..'Z') {
     }
     println()
 }
-println("-------------------------")
+println("---------------------------")
 println("Total word count: $totalWordCount")
-
-data class Entry(val name: String, val url: String)
 
 /**
  * See [this stackoverflow post](https://stackoverflow.com/a/69821965)
@@ -44,25 +44,11 @@ fun Char.getEntries(): List<Entry> {
         .userAgent("Mozilla")
         .header("content-type", "application/json")
         .header("accept", "application/json")
-        .requestBody("""{key: "$this", nodeID: 4324}""")
+        .requestBody("""{"key": "$this", "nodeID": 4324}""")
         .ignoreContentType(true)
         .post()
 
-/*
-    val document = Jsoup.connect(apiUrl)
-            .userAgent("Mozilla")
-            .header("content-type", "application/x-www-form-urlencoded")
-            .header("accept", "application/json")
-            .data("key", "$this")
-            .data("nodeID", "4324")
-            // OR
-            //.data(mapOf("key" to "$this", "nodeID" to "4324"))
-            .ignoreContentType(true)
-            .ignoreHttpErrors(true)
-            .post()
-*/
-
-    val response = document.body()
+    val json = document.body()
         .toString()
         .removePrefix("<body>")
         .removeSuffix("</body>")
@@ -70,19 +56,8 @@ fun Char.getEntries(): List<Entry> {
         .replace("]}", "]")
         .trim()
 
-    return Klaxon().parseArray(response)!!
+    return parser.parseArray(json) ?: error("Exception parsing the JSON")
 }
-
-//fun Entry.getMeaning(): String {
-//    val content = Jsoup.connect("$baseUrl$url")
-//            .userAgent("Mozilla")
-//            .get()
-//            .select(".content-wrapper")
-//            .single()
-//            .children()
-//    content.removeIf { it.`is`("h1") || it.text().contains("Author:") }
-//    return content.text()
-//}
 
 val Entry.meaning: String
     get() {
@@ -92,6 +67,7 @@ val Entry.meaning: String
             .select(".content-wrapper")
             .single()
             .children()
-        content.removeIf { it.`is`("h1") || it.text().contains("Author:") }
+        content.removeIf { it.tagName() == "h1" } // title
+        content.removeIf { it.text().contains("Author:") }
         return content.text()
     }
