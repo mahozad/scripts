@@ -1,5 +1,10 @@
 #!kotlinc -script -jvm-target 11 -cp "path\to\kotlinc\lib\kotlin-main-kts.jar"
 
+/*
+ * A Kotlin script for extracting (scraping) all the words and their meanings from
+ * https://www.mckinseyenergyinsights.com/resources/refinery-reference-desk/
+ */
+
 @file:JvmName("Scraper")
 @file:CompilerOptions("-jvm-target", "11")
 @file:Repository("https://repo.maven.apache.org/maven2")
