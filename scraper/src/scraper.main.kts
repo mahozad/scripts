@@ -15,6 +15,7 @@
 
 import com.beust.klaxon.Klaxon
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import java.io.File
 import java.io.PrintStream
 
@@ -33,7 +34,7 @@ System.setOut(PrintStream(output))
     .onEach { println("\n============ $it ============") }
     .flatMap { it.getEntries() }
     .onEach { totalWordCount++ }
-    .onEach { println("* ${it.name}\t${it.meaning}") }
+    .onEach { println("* ${it.name}\t${it.getMeaning()}") }
     .count()
 println()
 println("---------------------------")
@@ -51,21 +52,21 @@ fun Char.getEntries(): List<Entry> {
         .requestBody("""{"key": "$this", "nodeID": 4324}""")
         .ignoreContentType(true)
         .post()
-
-    val json = document
-        .body()
-        .text()
-        .removePrefix("""{"keyWords":""")
-        .removeSuffix("}")
-
+    val json = document.extractJsonArray()
     return parser.parseArray(json) ?: error("Error parsing the JSON")
 }
+
+fun Document.extractJsonArray() = this
+    .body()
+    .text()
+    .removePrefix("""{"keyWords":""")
+    .removeSuffix("}")
 
 /**
  * See [jsoup selector syntax](https://jsoup.org/cookbook/extracting-data/selector-syntax).
  */
-val Entry.meaning: String
-    get() = Jsoup.connect("$baseUrl$url")
+fun Entry.getMeaning() =
+    Jsoup.connect("$baseUrl$url")
         .userAgent("Mozilla")
         .get()
         .select(".content-wrapper")
