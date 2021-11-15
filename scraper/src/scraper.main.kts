@@ -75,3 +75,47 @@ fun Entry.getMeaning() =
         .not("h1") // Title
         .not(":contains(Author:)")
         .text()
+
+/**
+ * Here is another way to scrape a dynamic page.
+ * We are using Selenium to get the full HTML page and then parse the document with jsoup.
+ * We may also use HtmlUnit, but it does not seem to work well with XHR or AJAX requests in page.
+ *
+ * To use this approach, add Selenium to dependencies:
+ * `org.seleniumhq.selenium:selenium-java:4.0.0`
+ *
+ * Also download the Chrome driver (for example, version 95) from
+ * [here](https://www.selenium.dev/documentation/getting_started/installing_browser_drivers/#quick-reference)
+ * and place it beside this script.
+ *
+ * See [this post](https://stackoverflow.com/q/50189638).
+ */
+/*
+System.setProperty("webdriver.chrome.driver", "chromedriver.exe")
+val result = File("output.html")
+val driver = ChromeDriver() // OR FirefoxDriver(); download its driver and set the system property above
+*/
+/*
+driver.manage()
+    .timeouts()
+    .implicitlyWait(Duration.of(10, ChronoUnit.SECONDS))
+*/
+/*
+driver.get("https://www.singaporepools.com.sg/en/product/sr/Pages/toto_results.aspx?sppl=RHJhd051bWJlcj0zNjYx")
+result.writeText(driver.pageSource)
+driver.close()
+
+val document = Jsoup.parse(result, "UTF-8")
+val targetElement = document
+    .body()
+    .children()
+    .select(":containsOwn(Next Jackpot)")
+    .single()
+    .parent()!!
+
+val phrase = targetElement.text()
+val prize = targetElement.select("span").text().removeSuffix(" est")
+
+println(phrase)
+println(prize)
+*/
