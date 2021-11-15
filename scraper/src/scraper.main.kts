@@ -108,6 +108,7 @@ driver.get("https://www.singaporepools.com.sg/en/product/sr/Pages/toto_results.a
 result.writeText(driver.pageSource)
 driver.close()
 
+// Could also have used Jsoup.parse(driver.pageSource) instead of writing to and reading from a file
 val document = Jsoup.parse(result, "UTF-8")
 val targetElement = document
     .body()
