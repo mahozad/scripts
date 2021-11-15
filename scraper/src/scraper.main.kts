@@ -88,7 +88,8 @@ fun Entry.getMeaning() =
  * [here](https://www.selenium.dev/documentation/getting_started/installing_browser_drivers/#quick-reference)
  * and place it beside this script.
  *
- * See [this post](https://stackoverflow.com/q/50189638).
+ * See [this post](https://stackoverflow.com/q/50189638)
+ * and [this gist](https://gist.github.com/alexislucena/ce3bdccf334f5cd0da41920725947b5c).
  */
 /*
 System.setProperty("webdriver.chrome.driver", "chromedriver.exe")
