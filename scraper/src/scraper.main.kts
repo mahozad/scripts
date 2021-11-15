@@ -28,6 +28,7 @@ var totalWordCount = 0
 data class Entry(val name: String, val url: String)
 
 // TODO: Use .parallelStream() or coroutines
+//  See [this post](https://stackoverflow.com/a/60269837/8583692)
 System.setOut(PrintStream(output))
 ('A'..'Z')
     .asSequence()
