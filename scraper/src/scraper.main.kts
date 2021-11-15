@@ -79,7 +79,7 @@ fun Entry.getMeaning() =
 
 /**
  * Here is another way to scrape a dynamic page.
- * We are using Selenium to get the full HTML page and then parse the document with jsoup.
+ * We are using Selenium WebDriver to get the full HTML page and then parse the document with jsoup.
  * We may also use HtmlUnit, but it does not seem to work well with XHR or AJAX requests in page.
  *
  * To use this approach, add Selenium to dependencies:
