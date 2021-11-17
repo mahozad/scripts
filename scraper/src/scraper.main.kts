@@ -80,7 +80,7 @@ fun Entry.getMeaning() =
 /**
  * Here is another way to scrape a dynamic page.
  * We are using Selenium WebDriver to get the full HTML page and then parse the document with jsoup.
- * We may also use HtmlUnit, but it does not seem to work well with XHR or AJAX requests in page.
+ * We could also have used HtmlUnit, but it does not seem to work well with XHR or AJAX requests in page.
  *
  * To use this approach, add Selenium to dependencies:
  * `org.seleniumhq.selenium:selenium-java:4.0.0`
@@ -96,9 +96,9 @@ fun Entry.getMeaning() =
 /*
 System.setProperty("webdriver.chrome.driver", "chromedriver.exe")
 val result = File("output.html")
-val driver = ChromeDriver() // OR FirefoxDriver(); download its driver and set the system property above
+val driver = ChromeDriver() // OR FirefoxDriver(); download its driver and set the appropriate system property above
 */
-/*
+/* Not needed
 driver.manage()
     .timeouts()
     .implicitlyWait(Duration.of(10, ChronoUnit.SECONDS))
