@@ -33,9 +33,9 @@ System.setOut(PrintStream(output))
 ('A'..'Z')
     .asSequence()
     .onEach { println("\n============ $it ============") }
-    .flatMap { it.getEntries() }
+    .flatMap(::fetchEntries)
     .onEach { totalWordCount++ }
-    .forEach { println("* ${it.name}\t${it.getMeaning()}") }
+    .forEach { println("* ${it.name}\t${it.fetchMeaning()}") }
 println()
 println("---------------------------")
 println("Total word count: $totalWordCount")
@@ -44,12 +44,12 @@ println("Total word count: $totalWordCount")
  * See [this stackoverflow post](https://stackoverflow.com/a/69821965)
  * and [this MDN article](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST).
  */
-fun Char.getEntries(): List<Entry> {
+fun fetchEntries(char: Char): List<Entry> {
     val document = Jsoup.connect(apiUrl)
         .userAgent("Mozilla")
         .header("content-type", "application/json")
         .header("accept", "application/json")
-        .requestBody("""{"key": "$this", "nodeID": 4324}""")
+        .requestBody("""{"key": "$char", "nodeID": 4324}""")
         .ignoreContentType(true)
         .post()
     val json = document.extractJsonArray()
@@ -65,7 +65,7 @@ fun Document.extractJsonArray() = this
 /**
  * See [jsoup selector syntax](https://jsoup.org/cookbook/extracting-data/selector-syntax).
  */
-fun Entry.getMeaning() =
+fun Entry.fetchMeaning() =
     Jsoup.connect("$baseUrl$url")
         .userAgent("Mozilla")
         .get()
