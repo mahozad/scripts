@@ -1,4 +1,4 @@
-#!kotlinc -script -jvm-target 11 -cp "path\to\kotlinc\lib\kotlin-main-kts.jar"
+#!/usr/bin/env kotlin
 
 /*
  * A Kotlin script for extracting (scraping) all the words and their meanings from
