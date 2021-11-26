@@ -35,7 +35,7 @@ System.setOut(PrintStream(output))
     .onEach { println("\n============ $it ============") }
     .flatMap(::fetchEntries)
     .onEach { totalWordCount++ }
-    .forEach { println("* ${it.name}\t${it.fetchMeaning()}") }
+    .forEach { println("${it.name} | ${it.fetchMeaning()}") }
 println()
 println("---------------------------")
 println("Total word count: $totalWordCount")
