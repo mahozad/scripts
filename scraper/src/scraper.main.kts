@@ -46,7 +46,8 @@ println("Total word count: $totalWordCount")
  */
 fun fetchEntries(char: Char): List<Entry> {
     val document = Jsoup.connect(apiUrl)
-        .userAgent("Mozilla")
+        .userAgent("jsoup/1.14.3")
+        .referrer(baseUrl)
         .header("content-type", "application/json")
         .header("accept", "application/json")
         .requestBody("""{"key": "$char", "nodeID": 4324}""")
@@ -67,7 +68,8 @@ fun Document.extractJsonArray() = this
  */
 fun Entry.fetchMeaning() =
     Jsoup.connect("$baseUrl$url")
-        .userAgent("Mozilla")
+        .userAgent("jsoup/1.14.3")
+        .referrer(baseUrl)
         .get()
         .select(".content-wrapper")
         .single()
