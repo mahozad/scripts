@@ -1,0 +1,4 @@
+// Alternatively set in the subprojects{} closure of the parent project:
+// sourceSets.main.kotlin.srcDirs += "espot/src"
+sourceSets.main.kotlin.srcDirs = ["src"]
+sourceSets.test.kotlin.srcDirs = ["test"]
