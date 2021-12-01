@@ -1,4 +1,5 @@
 import java.io.File
+import java.lang.ProcessBuilder.Redirect
 import java.util.concurrent.TimeUnit
 
 /**
@@ -10,11 +11,13 @@ import java.util.concurrent.TimeUnit
 val command = "java --version"
 // val command = "cmd.exe /c dir"
 
-val process: Process = ProcessBuilder(command.split(" "))
+val process: Process = ProcessBuilder()
+    .command(command.split(" "))
     .directory(File("."))
-    .redirectOutput(ProcessBuilder.Redirect.PIPE)
-    .redirectError(ProcessBuilder.Redirect.PIPE)
+    .redirectOutput(Redirect.PIPE)
+    .redirectError(Redirect.PIPE)
     .start()
+
 process.waitFor(1, TimeUnit.SECONDS)
 
 val (vendor, version, date) = process
