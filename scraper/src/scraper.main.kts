@@ -91,6 +91,7 @@ fun Entry.fetchMeaning() =
  * Also download the Chrome driver (for example, version 95) from
  * [here](https://www.selenium.dev/documentation/getting_started/installing_browser_drivers/#quick-reference)
  * and place it beside this script.
+ * Alternatively, use the [WebDriverManager](https://github.com/bonigarcia/webdrivermanager) library.
  *
  * See [this post](https://stackoverflow.com/q/50189638)
  * and [this post](https://stackoverflow.com/q/33982064)
