@@ -6,7 +6,10 @@ To run kotlin scripts with Gradle see [this GitHub gist](https://gist.github.com
 Can scripts be run by adding Gradle *application* plugin?  
 Create a Gradle task of type *Exec*.  
 See [this approach](https://kotlinexpertise.com/execute-kotlin-scripts-with-gradle/).  
-Also [this SO post](https://stackoverflow.com/q/34974039) might be helpful.
+Also, [this SO post](https://stackoverflow.com/q/34974039) might be helpful.
+
+Furthermore, refer to [Java scripting API](https://docs.oracle.com/en/java/javase/11/scripting/java-scripting-api.html)
+and [this official Kotlin example](https://github.com/JetBrains/kotlin/blob/master/libraries/examples/kotlin-jsr223-local-example/src/test/kotlin/org/jetbrains/kotlin/script/jsr223/KotlinJsr223ScriptEngineIT.kt). 
 
 ---
 
