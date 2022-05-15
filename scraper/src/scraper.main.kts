@@ -10,7 +10,7 @@
 @file:Repository("https://repo.maven.apache.org/maven2")
 @file:Repository("https://jcenter.bintray.com")
 @file:Repository("https://jitpack.io")
-@file:DependsOn("org.jsoup:jsoup:1.14.3")
+@file:DependsOn("org.jsoup:jsoup:1.15.1")
 @file:DependsOn("com.beust:klaxon:5.5")
 
 import com.beust.klaxon.Klaxon
@@ -46,7 +46,7 @@ println("Total word count: $totalWordCount")
  */
 fun fetchEntries(char: Char): List<Entry> {
     val document = Jsoup.connect(apiUrl)
-        .userAgent("jsoup/1.14.3")
+        .userAgent("jsoup/1.15.1")
         .referrer(baseUrl)
         .header("From", "legacyazd@gmail.com")
         .header("Content-Type", "application/json")
@@ -69,7 +69,7 @@ fun Document.extractJsonArray() = this
  */
 fun Entry.fetchMeaning() =
     Jsoup.connect("$baseUrl$url")
-        .userAgent("jsoup/1.14.3")
+        .userAgent("jsoup/1.15.1")
         .referrer(baseUrl)
         .header("From", "legacyazd@gmail.com")
         .get()
@@ -113,7 +113,7 @@ result.writeText(driver.pageSource)
 driver.close()
 
 // Could also have used Jsoup.parse(driver.pageSource) instead of writing to and reading from a file
-val document = Jsoup.parse(result, "UTF-8")
+val document = Jsoup.parse(result)
 val targetElement = document
     .body()
     .children()
