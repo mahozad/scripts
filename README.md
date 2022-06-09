@@ -13,6 +13,12 @@ and [this official Kotlin example](https://github.com/JetBrains/kotlin/blob/mast
 
 ---
 
+To use the latest features of a new version of Kotlin, update IDE Kotlin plugin to that
+latest veresion and also ensure that the Kotlin version is set to that lates version in
+IDE Settings -> Build, ... -> Compiler -> Kotlin Compiler
+
+---
+
 Added the [Git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) with this command:
 ```shell
 git submodule add https://github.com/mahozad/<repo-name> <optional-folder-name>
