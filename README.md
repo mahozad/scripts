@@ -19,6 +19,18 @@ IDE Settings -> Build, ... -> Compiler -> Kotlin Compiler
 
 ---
 
+To get the location of the script file, use the implicit `__FILE__` variable.
+Or rename it to something else with `@file:ScriptFileLocaiton()`.
+See [Script: get location of the script.main.kts file](https://github.com/JetBrains/kotlin/pull/4597).
+
+```kotlin
+// @file:ScriptFileLocation("scriptFile")
+// println(scriptFile.absolutePath)
+println(__FILE__.absolutePath)
+```
+
+---
+
 Added the [Git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) with this command:
 ```shell
 git submodule add https://github.com/mahozad/<repo-name> <optional-folder-name>
